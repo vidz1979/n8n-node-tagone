@@ -37,10 +37,3 @@ These are the basic steps for working with the starter. For detailed guidance on
 10. Update the LICENSE file to use your details.
 11. [Publish](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) your package to npm.
 
-## More information
-
-Refer to our [documentation on creating nodes](https://docs.n8n.io/integrations/creating-nodes/) for detailed information on building your own nodes.
-
-## License
-
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)

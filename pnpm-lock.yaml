@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      joi:
+        specifier: ^17.13.3
+        version: 17.13.3
     devDependencies:
       '@typescript-eslint/parser':
         specifier: ^7.15.0
@@ -559,6 +563,12 @@ packages:
     resolution: {integrity: sha512-AiXO/bfe9bmxBjxxtYxFAXGZvMaN5s8kO+jBHAJCON8rJoB5YS/D6X7ZNc6XQkuHNmyl4CYaMI1fJ/Gn27RGGw==}
     engines: {node: '>=6'}
     hasBin: true
+
+  '@hapi/hoek@9.3.0':
+    resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
+
+  '@hapi/topo@5.1.0':
+    resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
   '@huggingface/inference@2.8.0':
     resolution: {integrity: sha512-Ti681P1qckcCAqgzmL53jBnluPuZGelmMIuXNjgAwC5+RIjF4S0SDQu6oy44ZTwekwNp2ETaZ2sXsOk+45aC4w==}
@@ -1407,6 +1417,15 @@ packages:
 
   '@sevinf/maybe@0.5.0':
     resolution: {integrity: sha512-ARhyoYDnY1LES3vYI0fiG6e9esWfTNcXcO6+MPJJXcnyMV3bim4lnFt45VXouV7y82F4x3YH8nOQ6VztuvUiWg==}
+
+  '@sideway/address@4.1.5':
+    resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
+
+  '@sideway/formula@3.0.1':
+    resolution: {integrity: sha512-/poHZJJVjx3L+zVD6g9KgHfYnb443oi7wLu/XKojDviHy6HOEOA6z1Trk5aR1dGcmPenJEgb2sK2I80LeS3MIg==}
+
+  '@sideway/pinpoint@2.0.0':
+    resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
   '@smithy/abort-controller@1.1.0':
     resolution: {integrity: sha512-5imgGUlZL4dW4YWdMYAKLmal9ny/tlenM81QZY7xYyb76z9Z/QOg7oM5Ak9HQl8QfFTlGVWwcMXl+54jroRgEQ==}
@@ -4129,6 +4148,9 @@ packages:
   jmespath@0.16.0:
     resolution: {integrity: sha512-9FzQjJ7MATs1tSpnco1K6ayiYE3figslrXA72G2HQ/n76RzvYlofyi5QM+iX4YRs/pu3yzxlVQSST23+dMDknw==}
     engines: {node: '>= 0.6.0'}
+
+  joi@17.13.3:
+    resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
 
   join-component@1.1.0:
     resolution: {integrity: sha512-bF7vcQxbODoGK1imE2P9GS9aw4zD0Sd+Hni68IMZLj7zRnquH7dXUmMw9hDI5S/Jzt7q+IyTXN0rSg2GI0IKhQ==}
@@ -8279,6 +8301,12 @@ snapshots:
       protobufjs: 7.4.0
       yargs: 17.7.2
 
+  '@hapi/hoek@9.3.0': {}
+
+  '@hapi/topo@5.1.0':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
   '@huggingface/inference@2.8.0':
     dependencies:
       '@huggingface/tasks': 0.11.13
@@ -9135,6 +9163,14 @@ snapshots:
       '@sentry/types': 7.87.0
 
   '@sevinf/maybe@0.5.0': {}
+
+  '@sideway/address@4.1.5':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
+  '@sideway/formula@3.0.1': {}
+
+  '@sideway/pinpoint@2.0.0': {}
 
   '@smithy/abort-controller@1.1.0':
     dependencies:
@@ -12572,6 +12608,14 @@ snapshots:
       minimatch: 3.1.2
 
   jmespath@0.16.0: {}
+
+  joi@17.13.3:
+    dependencies:
+      '@hapi/hoek': 9.3.0
+      '@hapi/topo': 5.1.0
+      '@sideway/address': 4.1.5
+      '@sideway/formula': 3.0.1
+      '@sideway/pinpoint': 2.0.0
 
   join-component@1.1.0: {}
 

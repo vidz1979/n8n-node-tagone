@@ -10,9 +10,10 @@ export function mountOdataQuery(query: OdataQuery): string {
 }
 
 export function mountOdataExpands(query: OdataQuery): string {
-	return Object.keys(query)
+	const expands = Object.keys(query)
 		.map((k) => makeOdataClauses(k, query[k as keyof OdataQuery]))
 		.join(';');
+	return expands ? `(${expands})` : '';
 }
 
 export function makeOdataClauses(k: string, item: any): string {
@@ -29,7 +30,7 @@ export function makeOdataClauses(k: string, item: any): string {
 			Object.keys(item)
 				.map((k2) => {
 					const item2 = (item as Record<string, OdataQuery>)[k2];
-					return `${k2}(${mountOdataExpands(item2!)})`;
+					return `${k2}${mountOdataExpands(item2!)}`;
 				})
 				.join(',')
 		);

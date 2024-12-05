@@ -58,5 +58,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "joi": "^17.13.3"
   }
 }
