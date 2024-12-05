@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-tagone",
+  "name": "@movelabs/n8n-nodes-tagone",
   "version": "0.1.0",
   "description": "N8N node para TagOne ERP",
   "keywords": [
