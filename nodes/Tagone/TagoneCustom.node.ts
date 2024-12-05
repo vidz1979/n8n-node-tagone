@@ -52,7 +52,7 @@ export class TagoneCustom implements INodeType {
 					},
 				],
 				default: 'GET',
-				description: 'O método HTTP a ser utilizado.',
+				description: 'O método HTTP a ser utilizado',
 			},
 			{
 				displayName: 'Endpoint',
@@ -68,7 +68,7 @@ export class TagoneCustom implements INodeType {
 				type: 'json',
 				placeholder: '{\n\t"$filter":"contains(Nome,\'João\')"\n}',
 				default: '{}',
-				description: '',
+				description: 'Query Odata para manipulação dos dados',
 			},
 		],
 	};
