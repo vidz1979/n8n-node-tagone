@@ -20,6 +20,7 @@ export class TagoneCustom implements INodeType {
 		defaults: {
 			name: 'TagOne Custom',
 		},
+		documentationUrl: 'https://github.com/vidz1979/n8n-nodes-tagone/blob/master/DOC.md',
 		inputs: ['main'],
 		outputs: ['main'],
 		credentials: [
