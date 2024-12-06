@@ -79,69 +79,52 @@ export class TagoneCustom implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const credentials = await this.getCredentials('tagoneApi');
+		const returnData = [];
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+			const method = this.getNodeParameter('method', itemIndex, 'GET') as IHttpRequestMethods;
+			const endpoint = this.getNodeParameter('endpoint', itemIndex, '');
+			const odataQueryString = this.getNodeParameter('odataQuery', itemIndex, '{}') as string;
+
 			try {
-				const method = this.getNodeParameter('method', itemIndex, 'GET') as IHttpRequestMethods;
-				const endpoint = this.getNodeParameter('endpoint', itemIndex, '');
-				const odataQueryString = this.getNodeParameter('odataQuery', itemIndex, '{}') as string;
+				var odataQueryObj = JSON.parse(odataQueryString);
+			} catch {
+				throw new NodeOperationError(this.getNode(), `Invalid Odata Query: error parsing JSON`, {});
+			}
 
-				try {
-					var odataQueryObj = JSON.parse(odataQueryString);
-				} catch {
-					throw new NodeOperationError(
-						this.getNode(),
-						`Invalid Odata Query: error parsing JSON`,
-						{},
-					);
-				}
+			const { value: odataQuery, error } = odataQuerySchema.validate(odataQueryObj);
 
-				const { value: odataQuery, error } = odataQuerySchema.validate(odataQueryObj);
+			if (error) {
+				throw new NodeOperationError(this.getNode(), `Invalid Odata Query: ${error.message}`, {});
+			}
+			if (!odataQuery.$top) odataQuery.$top = 200;
 
-				if (error) {
-					throw new NodeOperationError(this.getNode(), `Invalid Odata Query: ${error.message}`, {});
-				}
-				if (!odataQuery.$top) odataQuery.$top = 200;
+			const requestOptions: IRequestOptions = {
+				headers: {
+					cookie: credentials.cookie,
+				},
+				method,
+				uri: `${credentials.odataUrl}${endpoint}` + mountOdataQuery(odataQuery),
+			};
 
-				const requestOptions: IRequestOptions = {
-					headers: {
-						cookie: credentials.cookie,
-					},
-					method,
-					uri: `${credentials.odataUrl}${endpoint}` + mountOdataQuery(odataQuery),
-				};
+			const response = await this.helpers.request(requestOptions);
+			try {
+				var result = JSON.parse(response);
+			} catch {
+				throw new NodeOperationError(
+					this.getNode(),
+					`Invalid JSON response: error parsing JSON`,
+					{},
+				);
+			}
 
-				const response = await this.helpers.request(requestOptions);
-				try {
-					var result = JSON.parse(response);
-				} catch {
-					throw new NodeOperationError(
-						this.getNode(),
-						`Invalid JSON response: error parsing JSON`,
-						{},
-					);
-				}
-
-				if (result['value'] && Array.isArray(result['value']) && !odataQuery.$count) {
-					items[itemIndex].json = result['value'] as any;
-				} else {
-					items[itemIndex].json = result;
-				}
-			} catch (error) {
-				if (this.continueOnFail()) {
-					items.push({ json: this.getInputData(itemIndex)[0].json, error, pairedItem: itemIndex });
-				} else {
-					if (error.context) {
-						error.context.itemIndex = itemIndex;
-						throw error;
-					}
-					throw new NodeOperationError(this.getNode(), error, {
-						itemIndex,
-					});
-				}
+			if (result['value'] && Array.isArray(result['value']) && !odataQuery.$count) {
+				returnData.push(result['value']);
+			} else {
+				returnData.push(result);
 			}
 		}
 
-		return [items];
+		return returnData.map((data) => this.helpers.returnJsonArray(data));
 	}
 }
