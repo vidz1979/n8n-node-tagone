@@ -97,7 +97,9 @@ export class TagoneCustom implements INodeType {
 			if (error) {
 				throw new NodeOperationError(this.getNode(), `Invalid Odata Query: ${error.message}`, {});
 			}
-			if (!odataQuery.$top) odataQuery.$top = 200;
+
+			// nao pode ser utilizado top quando retornando registro unico. ex: GET /Pessoa('000000090393966')
+			// if (!odataQuery.$top) odataQuery.$top = 200;
 
 			const requestOptions: IRequestOptions = {
 				headers: {
@@ -118,13 +120,9 @@ export class TagoneCustom implements INodeType {
 				);
 			}
 
-			if (result['value'] && Array.isArray(result['value']) && !odataQuery.$count) {
-				returnData.push(result['value']);
-			} else {
-				returnData.push(result);
-			}
+			returnData.push(this.helpers.returnJsonArray(result));
 		}
 
-		return returnData.map((data) => this.helpers.returnJsonArray(data));
+		return returnData;
 	}
 }

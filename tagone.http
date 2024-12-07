@@ -1,0 +1,91 @@
+@base_url = https://modaverao.tagone.com.br/odata
+###
+/Nota
+{
+    "$filter": [
+        "CodigoNota gt '{{ $json.ultimoCodigoNota }}'",
+        "Situacao eq true",
+        "Destinatario/CodigoTipoPessoa ne 2",
+        "CodigoDestinatario ne '000000000000001'",
+        "TipoOperacao/ModeloDocumento eq 65"
+    ],
+    "$select": "CodigoNota,CodigoEmpresa,ValorNota,DataCriacao",
+    "$expand": {
+        "Destinatario": {
+            "$select": "CodigoPessoa,NomePessoa,CpfCnpj,Sexo,DataNascimento,NomePai,NomeMae,Email,TiposPessoa",
+            "$expand": {
+                "PessoaTelefones": {
+                    "$select": "Telefone,Padrao,CodigoTipoTelefone",
+                    "$orderby": "Padrao desc",
+                    "$filter": [
+                        "Situacao eq true",
+                        "CodigoTipoContato eq 1",
+                        "contains(Telefone, ')9') or contains(Telefone, ')8')"
+                    ]
+                }
+            }
+        }
+    },
+    "$orderby": "CodigoNota",
+    "$top": 10
+}
+###
+/Nota
+{
+  "$apply": "filter(((((DataEmissao ge 2024-12-01T00:00:00Z) and (DataEmissao le 2024-12-31T00:00:00Z)) and (TipoOperacao/ModeloDocumento eq 65)) and (CodigoSituacaoNota eq 2)) and (CodigoDestinatario eq '{{ $json.Destinatario.CodigoPessoa }}'))/aggregate(ValorNota with sum as total)"
+}
+
+###
+{{base_url}}/ViewAnaliseVenda
+	?$top=20
+	&$count=true
+	&$filter=CodigoNota gt '000000901556099' and CodigoDestinatario ne '000000000000001' and ValorLiquido gt 10
+###
+/ViewAnaliseVenda
+{
+		"$top": 20,
+		"$count": true,
+		"$filter": [
+				"CodigoNota gt '{{ $json.ultimoCodigoNota }}'",
+				"CodigoDestinatario ne '000000000000001'",
+				"ValorLiquido gt 10"
+		]
+}
+
+###
+{{base_url}}/Pessoa('000000090502638')
+	?$select=CodigoPessoa,NomePessoa,CpfCnpj,Sexo,DataNascimento,NomePai,NomeMae,Email,TiposPessoa,CodigoTipoPessoa
+	&$expand=PessoaTelefones($select=Telefone,Padrao,CodigoTipoTelefone;$orderby=Padrao desc;$filter=Situacao eq true and CodigoTipoContato eq 1 and (contains(Telefone, ')9') or contains(Telefone, ')8')))
+
+###
+/Pessoa
+{
+	"$filter": [
+		"CodigoTipoPessoa ne 2",
+		"CodigoPessoa eq '000000090502638'"
+	],
+	"$top": 1,
+	"$select": "CodigoPessoa,NomePessoa,CpfCnpj,Sexo,DataNascimento,NomePai,NomeMae,Email,TiposPessoa,CodigoTipoPessoa",
+	"$expand": {
+		"PessoaTelefones": {
+			"$select": "Telefone,Padrao,CodigoTipoTelefone",
+			"$orderby": "Padrao desc",
+			"$filter": [
+				"Situacao eq true",
+				"CodigoTipoContato eq 1",
+				"(contains(Telefone, ')9') or contains(Telefone, ')8'))"
+			]
+		}
+	}
+}
+
+
+###
+{{base_url}}/ViewAnaliseVenda
+	?$apply=filter(CodigoDestinatario eq '000000090502638' and DataVenda ge 2024-12-01T00:00:00Z and DataVenda le 2024-12-31T00:00:00Z)/aggregate(ValorLiquido with sum as ValorTotal, $count as QtdVendas)
+
+###
+/ViewAnaliseVenda
+{
+	"$apply": "filter((CodigoDestinatario eq '{{ $json.Destinatario.CodigoPessoa }}') and (DataVenda ge 2024-12-01T00:00:00Z) and (DataVenda le 2024-12-31T00:00:00Z))/aggregate(ValorLiquido with sum as ValorTotal, $count as QtdVendas)"
+}

@@ -1,6 +1,6 @@
 {
   "name": "@jrvidotti/n8n-nodes-tagone",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "N8N node para TagOne ERP",
   "keywords": [
     "n8n-community-node-package"
@@ -28,7 +28,7 @@
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
     "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "prepublishOnly": "rm -rf dist && pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes credentials package.json"
   },
   "files": [
     "dist"
